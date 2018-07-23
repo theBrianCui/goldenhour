@@ -14,10 +14,12 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.22",
     "@types/jest": "^23.3.0",
     "@types/node": "^10.5.2",
     "@types/react": "^16.4.6",
     "@types/react-dom": "^16.0.6",
+    "bluebird": "^3.5.1",
     "suncalc": "^1.8.0",
     "typescript": "^2.9.2"
   }

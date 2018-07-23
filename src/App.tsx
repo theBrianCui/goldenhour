@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './App.css';
 
+import getLocation, { IPosition } from './dom/location';
 import logo from './logo.svg';
 
 interface IAppState {
@@ -30,19 +31,15 @@ class App extends React.Component<object, IAppState> {
   }
 
   public componentDidMount() {
-    let location = "Location is not supported by this browser";
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((success) => {
-        console.log("Location received!");
-        location = `${success.coords.latitude} LAT ${success.coords.longitude} LONG`;
-
-        this.setState({
-          location,
-        });
-      }, (err) => {
-        console.log(`Error: ${err.toString()}`);
+    getLocation().then((position: IPosition) => {
+      this.setState({
+        location: `LAT ${position.latitude} LONG ${position.longitude}`,
       });
-    }
+    }).catch((error: string) => {
+      this.setState({
+        location: error,
+      });
+    });
   }
 }
 
