@@ -1,7 +1,15 @@
 import { expect } from "chai";
 import * as moment from "moment";
 import { IPosition } from "../dom/location";
-import { AstronomicalTwilightSymbol, CivilTwilightSymbol, DawnSymbol, EventOrder, IInterval, ITwilight, NauticalTwilightSymbol, getSunEvents, DuskSymbol } from "./sunEvents";
+import { AstronomicalTwilightSymbol,
+    CivilTwilightSymbol,
+    DawnSymbol,
+    DuskSymbol,
+    EventOrder,
+    getSunEvents,
+    IInterval,
+    ITwilight,
+    NauticalTwilightSymbol } from "./sunEvents";
 
 // tslint:disable:no-unused-expression
 describe('lib/sunEvents.ts', () => {
