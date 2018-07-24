@@ -5,11 +5,15 @@ import * as SunCalc from "suncalc";
 import { IPosition } from "../dom/location";
 import { IInterval } from "../interfaces";
 
-export interface ITwilight {
+export interface ITwilight extends IInterval {
     civil: IInterval,
     nautical: IInterval,
     astronomical: IInterval,
 }
+
+export const EventOrder =
+    ['sunrise', 'goldenHourMorning', 'solarNoon', 'goldenHourEvening', 'sunset',
+     'dusk', 'night', 'nadir', 'dawn'];
 
 export interface ISunEvents {
     sunrise: IInterval,
@@ -30,8 +34,12 @@ export interface ISunEvents {
  * @param date Specifies the day.
  * @param location Specifies the target location.
  */
-function getSunEvents(date: Moment, location: IPosition): ISunEvents {
+export function getSunEvents(date: Moment, location: IPosition): ISunEvents {
     const times = SunCalc.getTimes(date.toDate(), location.latitude, location.longitude);
+    const sunriseTomorrow = moment(SunCalc.getTimes(
+        date.add(1, 'd').toDate(),
+        location.latitude,
+        location.longitude).sunrise);
 
     return {
         sunrise: {
@@ -55,6 +63,9 @@ function getSunEvents(date: Moment, location: IPosition): ISunEvents {
             end: moment(times.sunset),
         },
         dusk: {
+            start: moment(times.sunset),
+            end: moment(times.night),
+
             civil: {
                 start: moment(times.sunset),
                 end: moment(times.dusk),
@@ -77,6 +88,9 @@ function getSunEvents(date: Moment, location: IPosition): ISunEvents {
             end: moment(times.nadir).add(5, 'm'),
         },
         dawn: {
+            start: moment(times.nightEnd),
+            end: sunriseTomorrow,
+
             astronomical: {
                 start: moment(times.nightEnd),
                 end: moment(times.nauticalDawn),
@@ -87,36 +101,8 @@ function getSunEvents(date: Moment, location: IPosition): ISunEvents {
             },
             civil: {
                 start: moment(times.dawn),
-                end: moment(SunCalc.getTimes(
-                    date.add(1, 'd').toDate(),
-                    location.latitude,
-                    location.longitude).sunrise),
+                end: sunriseTomorrow,
             },
         }
-    }
-}
-
-/**
- * Gets the upcoming morning and evening golden hour times for the current time.
- * If a golden hour is currently ongoing, it will be included in the result.
- * @param location Specifies the target location.
- */
-export default function getUpcomingGoldenHours(location: IPosition): IGoldenHours {
-    const todayGoldenHours = getGoldenHours(moment(), location);
-    const tomorrowGoldenHours = getGoldenHours(moment().add(1, 'd'), location);
-
-    const currentInterval = moment().subtract(1, 'h');
-    if (currentInterval.isBefore(todayGoldenHours.morning.start)) {
-        return {
-            morning: todayGoldenHours.morning,
-            evening: todayGoldenHours.evening,
-        };
-    } else if (currentInterval.isBefore(todayGoldenHours.evening.end)) {
-        return {
-            morning: tomorrowGoldenHours.morning,
-            evening: todayGoldenHours.evening,
-        }
-    } else {
-        return tomorrowGoldenHours;
     }
 }
