@@ -13,7 +13,7 @@ function Header(props: IHeaderProps): JSX.Element {
         <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">{props.status}</h1>
-            <span>Current Time: {props.currentTime}</span>
+            <span>{props.currentTime}</span>
         </header>
     );
 }
@@ -21,7 +21,7 @@ function Header(props: IHeaderProps): JSX.Element {
 function mapStateToProps(state: IState) {
     return {
         status: state.status,
-        currentTime: state.currentTime.format("MM/DD/YYYY h:mm:ss a"),
+        currentTime: state.currentTime.format("MM/DD/YYYY hh:mm:ss a"),
     };
 }
 

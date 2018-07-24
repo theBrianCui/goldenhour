@@ -10,8 +10,10 @@ interface IEventListProps {
     eventList: ISunEvents | null;
 }
 
-function eventKey(symbol: symbol, moment: Moment): string {
-    return symbol.toString() + moment.format("DDDDYYYY");
+const commonFormatString = "MM/DD/YYYY hh:mm:ss a";
+
+function eventKey(symbol: symbol, moment: Moment, subsymbol?: symbol): string {
+    return symbol.toString() + moment.format("DDDDYYYY") + (subsymbol ? subsymbol.toString() : "");
 }
 
 function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.Element[] {
@@ -28,9 +30,9 @@ function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.
             <EventRow
                 key={eventKey(eventSymbol, currentTime)}
                 name={eventSymbol.toString()}
-                start={event.start.format("h:mm:ss a")}
-                end={event.end.format("h:mm:ss a")}
-                happeningNow={currentTime.isBetween(event.start, event.end)}
+                start={event.start.format(commonFormatString)}
+                end={event.end.format(commonFormatString)}
+                happeningNow={currentTime.isBetween(event.start, event.end, "second", "[]")}
             />
         );
 
@@ -42,31 +44,31 @@ function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.
 
             twilightNodes.push(
                 <EventRow
-                    key={eventKey(CivilTwilightSymbol, currentTime)}
+                    key={eventKey(CivilTwilightSymbol, currentTime, eventSymbol)}
                     name={CivilTwilightSymbol.toString()}
-                    start={civilTwilight.start.format("h:mm:ss a")}
-                    end={civilTwilight.end.format("h:mm:ss a")}
-                    happeningNow={currentTime.isBetween(civilTwilight.start, civilTwilight.end)}
+                    start={civilTwilight.start.format(commonFormatString)}
+                    end={civilTwilight.end.format(commonFormatString)}
+                    happeningNow={currentTime.isBetween(civilTwilight.start, civilTwilight.end, "second", "[]")}
                 />
             );
 
             twilightNodes.push(
                 <EventRow
-                    key={eventKey(NauticalTwilightSymbol, currentTime)}
+                    key={eventKey(NauticalTwilightSymbol, currentTime, eventSymbol)}
                     name={NauticalTwilightSymbol.toString()}
-                    start={nauticalTwilight.start.format("h:mm:ss a")}
-                    end={nauticalTwilight.end.format("h:mm:ss a")}
-                    happeningNow={currentTime.isBetween(nauticalTwilight.start, nauticalTwilight.end)}
+                    start={nauticalTwilight.start.format(commonFormatString)}
+                    end={nauticalTwilight.end.format(commonFormatString)}
+                    happeningNow={currentTime.isBetween(nauticalTwilight.start, nauticalTwilight.end, "second", "[]")}
                 />
             );
 
             twilightNodes.push(
                 <EventRow
-                    key={eventKey(AstronomicalTwilightSymbol, currentTime)}
+                    key={eventKey(AstronomicalTwilightSymbol, currentTime, eventSymbol)}
                     name={AstronomicalTwilightSymbol.toString()}
-                    start={astronomicalTwilight.start.format("h:mm:ss a")}
-                    end={astronomicalTwilight.end.format("h:mm:ss a")}
-                    happeningNow={currentTime.isBetween(astronomicalTwilight.start, astronomicalTwilight.end)}
+                    start={astronomicalTwilight.start.format(commonFormatString)}
+                    end={astronomicalTwilight.end.format(commonFormatString)}
+                    happeningNow={currentTime.isBetween(astronomicalTwilight.start, astronomicalTwilight.end, "second", "[]")}
                 />
             );
 

@@ -31,10 +31,11 @@ export interface ITwilight extends IInterval {
 }
 
 export const EventOrder =
-    [SunriseSymbol, GoldenHourMorningSymbol, SolarNoonSymbol, GoldenHourEveningSymbol, SunsetSymbol,
-     DuskSymbol, NightSymbol, NadirSymbol, DawnSymbol];
+    [DawnSymbol, SunriseSymbol, GoldenHourMorningSymbol, SolarNoonSymbol,
+     GoldenHourEveningSymbol, SunsetSymbol, DuskSymbol, NightSymbol, NadirSymbol];
 
 export interface ISunEvents {
+    [DawnSymbol]: ITwilight;
     [SunriseSymbol]: IInterval;
     [GoldenHourMorningSymbol]: IInterval;
     [SolarNoonSymbol]: IInterval;
@@ -44,7 +45,6 @@ export interface ISunEvents {
     [DuskSymbol]: ITwilight;
     [NightSymbol]: IInterval;
     [NadirSymbol]: IInterval;
-    [DawnSymbol]: ITwilight;
 }
 
 /**
@@ -54,12 +54,28 @@ export interface ISunEvents {
  */
 export function getSunEvents(date: Moment, location: IPosition): ISunEvents {
     const times = SunCalc.getTimes(date.toDate(), location.latitude, location.longitude);
-    const sunriseTomorrow = moment(SunCalc.getTimes(
-        date.add(1, 'd').toDate(),
-        location.latitude,
-        location.longitude).sunrise);
+    const timesTomorrow = SunCalc.getTimes(date.add(1, 'd').toDate(), location.latitude, location.longitude);
+
+    const nadirStart = moment(times.nadir).isAfter(moment(times.night)) ? moment(times.nadir) : moment(timesTomorrow.nadir);
 
     return {
+        [DawnSymbol]: {
+            start: moment(times.nightEnd),
+            end: moment(times.sunrise),
+
+            [AstronomicalTwilightSymbol]: {
+                start: moment(times.nightEnd),
+                end: moment(times.nauticalDawn),
+            },
+            [NauticalTwilightSymbol]: {
+                start: moment(times.nauticalDawn),
+                end: moment(times.dawn),
+            },
+            [CivilTwilightSymbol]: {
+                start: moment(times.dawn),
+                end: moment(times.sunrise),
+            },
+        },
         [SunriseSymbol]: {
             start: moment(times.sunrise),
             end: moment(times.sunriseEnd),
@@ -102,25 +118,8 @@ export function getSunEvents(date: Moment, location: IPosition): ISunEvents {
             end: moment(times.nightEnd),
         },
         [NadirSymbol]: {
-            start: moment(times.nadir),
-            end: moment(times.nadir).add(5, 'm'),
+            start: nadirStart,
+            end: nadirStart.add(5, 'm'),
         },
-        [DawnSymbol]: {
-            start: moment(times.nightEnd),
-            end: sunriseTomorrow,
-
-            [AstronomicalTwilightSymbol]: {
-                start: moment(times.nightEnd),
-                end: moment(times.nauticalDawn),
-            },
-            [NauticalTwilightSymbol]: {
-                start: moment(times.nauticalDawn),
-                end: moment(times.dawn),
-            },
-            [CivilTwilightSymbol]: {
-                start: moment(times.dawn),
-                end: sunriseTomorrow,
-            },
-        }
     };
 }
