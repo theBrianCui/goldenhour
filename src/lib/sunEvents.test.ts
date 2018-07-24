@@ -1,29 +1,9 @@
 import { expect } from "chai";
 import * as moment from "moment";
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import App from './App';
-import { IPosition } from "./dom/location";
-import { EventOrder, getSunEvents, IInterval} from "./lib/sunEvents";
-import { Reducers } from './redux/reducers';
- 
-jest.mock("./dom/location.ts");
+import { IPosition } from "../dom/location";
+import { EventOrder, getSunEvents, IInterval } from "./sunEvents";
 
 // tslint:disable:no-unused-expression
-describe('App.tsx', () => {
-    it('renders without crashing', () => {
-        const store = createStore(Reducers);
-        const div = document.createElement('div');
-        ReactDOM.render(
-            <Provider store={store}>
-                <App />
-            </Provider>, div);
-        ReactDOM.unmountComponentAtNode(div);
-    });
-});
-
 describe('lib/sunEvents.ts', () => {
     const now = moment("2018-01-14").startOf('day').add(12, 'h');
     const tomorrow = moment(now).add(1, 'd');
