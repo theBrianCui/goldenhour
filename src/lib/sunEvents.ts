@@ -3,32 +3,50 @@ import { Moment } from "moment";
 import * as SunCalc from "suncalc";
 
 import { IPosition } from "../dom/location";
-import { IInterval } from "../interfaces";
+
+export const SunriseSymbol = Symbol("sunrise");
+export const GoldenHourMorningSymbol = Symbol("goldenHourMorning");
+export const SolarNoonSymbol = Symbol("solarNoon");
+export const GoldenHourEveningSymbol = Symbol("goldenHourEvening");
+export const SunsetSymbol = Symbol("sunset");
+export const DuskSymbol = Symbol("dusk");
+
+export const CivilTwilightSymbol = Symbol("civilTwilight");
+export const NauticalTwilightSymbol = Symbol("nauticalTwilight");
+export const AstronomicalTwilightSymbol = Symbol("astronomicalTwilight");
+
+export const NightSymbol = Symbol("night");
+export const NadirSymbol = Symbol("nadir");
+export const DawnSymbol = Symbol("dawn");
+
+export interface IInterval {
+    start: Moment;
+    end: Moment;
+}
 
 export interface ITwilight extends IInterval {
-    civil: IInterval,
-    nautical: IInterval,
-    astronomical: IInterval,
+    [CivilTwilightSymbol]: IInterval,
+    [NauticalTwilightSymbol]: IInterval,
+    [AstronomicalTwilightSymbol]: IInterval,
 }
 
 export const EventOrder =
-    ['sunrise', 'goldenHourMorning', 'solarNoon', 'goldenHourEvening', 'sunset',
-     'dusk', 'night', 'nadir', 'dawn'];
+    [SunriseSymbol, GoldenHourMorningSymbol, SolarNoonSymbol, GoldenHourEveningSymbol, SunsetSymbol,
+     DuskSymbol, NightSymbol, NadirSymbol, DawnSymbol];
 
 export interface ISunEvents {
-    sunrise: IInterval,
-    goldenHourMorning: IInterval,
-    solarNoon: IInterval,
-    goldenHourEvening: IInterval,
-    sunset: IInterval,
+    [SunriseSymbol]: IInterval,
+    [GoldenHourMorningSymbol]: IInterval,
+    [SolarNoonSymbol]: IInterval,
+    [GoldenHourEveningSymbol]: IInterval,
+    [SunsetSymbol]: IInterval,
 
-    dusk: ITwilight,
-    night: IInterval,
-    nadir: IInterval,
-    dawn: ITwilight,
+    [DuskSymbol]: ITwilight,
+    [NightSymbol]: IInterval,
+    [NadirSymbol]: IInterval,
+    [DawnSymbol]: ITwilight,
 }
 
-// tslint:disable:object-literal-sort-keys
 /**
  * Gets the sun events for a given day.
  * @param date Specifies the day.
@@ -42,64 +60,64 @@ export function getSunEvents(date: Moment, location: IPosition): ISunEvents {
         location.longitude).sunrise);
 
     return {
-        sunrise: {
+        [SunriseSymbol]: {
             start: moment(times.sunrise),
             end: moment(times.sunriseEnd),
         },
-        goldenHourMorning: {
+        [GoldenHourMorningSymbol]: {
             start: moment(times.goldenHourEnd),
             end: moment(times.goldenHourEnd).add(1, 'h'),
         },
-        solarNoon: {
+        [SolarNoonSymbol]: {
             start: moment(times.solarNoon),
             end: moment(times.solarNoon).add(5, 'm'),
         },
-        goldenHourEvening: {
+        [GoldenHourEveningSymbol]: {
             start: moment(times.goldenHour),
             end: moment(times.goldenHour).add(1, 'h'),
         },
-        sunset: {
+        [SunsetSymbol]: {
             start: moment(times.sunsetStart),
             end: moment(times.sunset),
         },
-        dusk: {
+        [DuskSymbol]: {
             start: moment(times.sunset),
             end: moment(times.night),
 
-            civil: {
+            [CivilTwilightSymbol]: {
                 start: moment(times.sunset),
                 end: moment(times.dusk),
             },
-            nautical: {
+            [NauticalTwilightSymbol]: {
                 start: moment(times.dusk),
                 end: moment(times.nauticalDusk)
             },
-            astronomical: {
+            [AstronomicalTwilightSymbol]: {
                 start: moment(times.nauticalDusk),
                 end: moment(times.night),
             }
         },
-        night: {
+        [NightSymbol]: {
             start: moment(times.night),
             end: moment(times.nightEnd),
         },
-        nadir: {
+        [NadirSymbol]: {
             start: moment(times.nadir),
             end: moment(times.nadir).add(5, 'm'),
         },
-        dawn: {
+        [DawnSymbol]: {
             start: moment(times.nightEnd),
             end: sunriseTomorrow,
 
-            astronomical: {
+            [AstronomicalTwilightSymbol]: {
                 start: moment(times.nightEnd),
                 end: moment(times.nauticalDawn),
             },
-            nautical: {
+            [NauticalTwilightSymbol]: {
                 start: moment(times.nauticalDawn),
                 end: moment(times.dawn),
             },
-            civil: {
+            [CivilTwilightSymbol]: {
                 start: moment(times.dawn),
                 end: sunriseTomorrow,
             },

@@ -1,8 +1,9 @@
 import * as React from "react";
-import { IInterval } from "../interfaces";
 
-export interface IEventRowProps extends IInterval {
+export interface IEventRowProps {
     name: string;
+    start: string;
+    end: string;
     happeningNow: boolean;
 }
 
@@ -18,7 +19,7 @@ export function EventRow(props: IEventRowProps): JSX.Element {
                 <strong>
                     {props.name}:
                 </strong>
-                Start: {props.start.format("h:mm:ss a")}, End: {props.end.format("h:mm:ss a")}
+                Start: {props.start}, End: {props.end}
             </div>
             {happeningNowDiv}
         </div>

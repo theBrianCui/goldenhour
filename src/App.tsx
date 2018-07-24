@@ -1,10 +1,10 @@
 import * as moment from 'moment';
 import * as React from 'react';
 import './App.css';
-import { EventRow, IEventRowProps } from './components/eventRow';
+import { EventRow, IEventRowProps } from './components/EventRow';
 import getLocation from './dom/location';
-import { IInterval } from './interfaces';
-import { EventOrder, getSunEvents, ITwilight } from './lib/sunEvents';
+import { IInterval, ITwilight } from './interfaces';
+import { EventOrder, getSunEvents } from './lib/sunEvents';
 import logo from './logo.svg';
 
 interface IAppState {
