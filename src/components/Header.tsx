@@ -5,6 +5,7 @@ import { IState } from "../redux/reducers";
 
 export interface IHeaderProps {
     status: string;
+    currentTime: string;
 }
 
 function Header(props: IHeaderProps): JSX.Element {
@@ -12,6 +13,7 @@ function Header(props: IHeaderProps): JSX.Element {
         <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">{props.status}</h1>
+            <span>Current Time: {props.currentTime}</span>
         </header>
     );
 }
@@ -19,6 +21,7 @@ function Header(props: IHeaderProps): JSX.Element {
 function mapStateToProps(state: IState) {
     return {
         status: state.status,
+        currentTime: state.currentTime.format("MM/DD/YYYY h:mm:ss a"),
     };
 }
 

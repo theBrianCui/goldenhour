@@ -23,5 +23,5 @@ export function EventRow(props: IEventRowProps): JSX.Element {
             </div>
             {happeningNowDiv}
         </div>
-    )
+    );
 }
