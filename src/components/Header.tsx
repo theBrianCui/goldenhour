@@ -1,6 +1,6 @@
 import * as React from "react";
-import logo from "./logo.svg";
 import { connect } from "react-redux";
+import logo from "../logo.svg";
 import { IState } from "../redux/reducers";
 
 export interface IHeaderProps {
@@ -22,4 +22,4 @@ function mapStateToProps(state: IState) {
     };
 }
 
-export default connect<{}, {}, {}, IState>(mapStateToProps)(Header);
+export default connect<any, IState>(mapStateToProps)(Header);

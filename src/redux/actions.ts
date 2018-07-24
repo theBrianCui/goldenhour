@@ -1,6 +1,6 @@
 import * as moment from "moment";
 import { Moment } from "moment";
-import { IInterval, ISunEvents } from "../lib/sunEvents";
+import { ISunEvents } from "../lib/sunEvents";
 
 export enum ActionTypes {
     UPDATE_CURRENT_TIME = 'UPDATE_CURRENT_TIME',
