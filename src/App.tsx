@@ -21,7 +21,10 @@ export default class App extends React.Component {
     public componentDidMount() {
         const now = moment();
         getLocation()
-            .then(location => getSunEvents(now, location))
+            .then(location => {
+                store.dispatch(updateStatus(`LAT: ${location.latitude} LONG: ${location.longitude}`));
+                return getSunEvents(now, location);
+            })
             .then(sunEvents => {
                 store.dispatch(updateEventList(now, sunEvents));
             })
