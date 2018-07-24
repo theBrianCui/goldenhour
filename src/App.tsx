@@ -22,10 +22,10 @@ class App extends React.Component<object, IAppState> {
     }
 
     public render() {
-        const eventList = this.state.eventList.map((eventProps) => {
+        const eventList = this.state.eventList.map((eventProps, index) => {
             return (
                 /* shh, don't tell anyone about this key parameter */
-                <EventRow {...eventProps} key={Date.now()}>{event}</EventRow>
+                <EventRow {...eventProps} key={index}>{event}</EventRow>
             );
         })
         return (
@@ -34,9 +34,9 @@ class App extends React.Component<object, IAppState> {
                     <img src={logo} className="App-logo" alt="logo" />
                     <h1 className="App-title">{this.state.status}</h1>
                 </header>
-                <p className="App-intro">
+                <div className="App-intro">
                     {eventList}
-                </p>
+                </div>
             </div>
         );
     }
@@ -52,6 +52,7 @@ class App extends React.Component<object, IAppState> {
             .then(location => getSunEvents(now, location))
             .then(sunEvents => {
                 let events: IEventRowProps[] = [];
+                console.log(JSON.stringify(sunEvents));
 
                 for (const eventName of EventOrder) {
                     const event: IInterval = sunEvents[eventName];
@@ -69,21 +70,22 @@ class App extends React.Component<object, IAppState> {
                     /* Twilight Events have civil, nautical, and astronomical subevents. */
                     const twilightEvent: ITwilight = event as ITwilight;
                     let twilightEvents: IEventRowProps[] = [];
+                    console.log(JSON.stringify(twilightEvent));
 
                     twilightEvents.push({
-                        ...event,
+                        ...twilightEvent.civil,
                         happeningNow: now.isBetween(twilightEvent.civil.start, twilightEvent.civil.end),
                         name: `${eventName} civil twilight`,
                     });
 
                     twilightEvents.push({
-                        ...event,
+                        ...twilightEvent.nautical,
                         happeningNow: now.isBetween(twilightEvent.nautical.start, twilightEvent.nautical.end),
                         name: `${eventName} nautical twilight`,
                     });
 
                     twilightEvents.push({
-                        ...event,
+                        ...twilightEvent.astronomical,
                         happeningNow: now.isBetween(twilightEvent.astronomical.start, twilightEvent.astronomical.end),
                         name: `${eventName} astronomical twilight`,
                     });
