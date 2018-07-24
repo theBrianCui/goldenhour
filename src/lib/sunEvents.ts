@@ -54,8 +54,9 @@ export interface ISunEvents {
  */
 export function getSunEvents(date: Moment, location: IPosition): ISunEvents {
     const times = SunCalc.getTimes(date.toDate(), location.latitude, location.longitude);
-    const timesTomorrow = SunCalc.getTimes(date.add(1, 'd').toDate(), location.latitude, location.longitude);
+    const timesTomorrow = SunCalc.getTimes(moment(date).add(1, 'd').toDate(), location.latitude, location.longitude);
 
+    const nightEnd = moment(times.nightEnd).isAfter(moment(times.night)) ? moment(times.nightEnd) : moment(timesTomorrow.nightEnd);
     const nadirStart = moment(times.nadir).isAfter(moment(times.night)) ? moment(times.nadir) : moment(timesTomorrow.nadir);
 
     return {
@@ -115,11 +116,11 @@ export function getSunEvents(date: Moment, location: IPosition): ISunEvents {
         },
         [NightSymbol]: {
             start: moment(times.night),
-            end: moment(times.nightEnd),
+            end: nightEnd,
         },
         [NadirSymbol]: {
             start: nadirStart,
-            end: nadirStart.add(5, 'm'),
+            end: moment(nadirStart).add(5, 'm'),
         },
     };
 }
