@@ -10,7 +10,7 @@ interface IEventListProps {
     eventList: ISunEvents | null;
 }
 
-const commonFormatString = "MM/DD/YYYY hh:mm:ss a";
+const commonFormatString = "hh:mm:ss a";
 
 function eventKey(symbol: symbol, moment: Moment, subsymbol?: symbol): string {
     return symbol.toString() + moment.format("DDDDYYYY") + (subsymbol ? subsymbol.toString() : "");

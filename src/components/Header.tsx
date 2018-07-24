@@ -12,8 +12,8 @@ function Header(props: IHeaderProps): JSX.Element {
     return (
         <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">{props.status}</h1>
-            <span>{props.currentTime}</span>
+            <h1 className="App-title">{props.currentTime}</h1>
+            <span>{props.status}</span>
         </header>
     );
 }
