@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as moment from "moment";
 import { IPosition } from "../dom/location";
-import { EventOrder, getSunEvents, IInterval } from "./sunEvents";
+import { AstronomicalTwilightSymbol, CivilTwilightSymbol, DawnSymbol, EventOrder, IInterval, ITwilight, NauticalTwilightSymbol, getSunEvents, DuskSymbol } from "./sunEvents";
 
 // tslint:disable:no-unused-expression
 describe('lib/sunEvents.ts', () => {
@@ -41,5 +41,39 @@ describe('lib/sunEvents.ts', () => {
             expect(interval.end.isAfter(previousMoment)).to.be.true;
             previousMoment = interval.start;
         }
+    });
+
+    it("correctly orders dawn twilight", () => {
+        const sunEvents = getSunEvents(now, location);
+        const dawn: ITwilight = sunEvents[DawnSymbol];
+
+        expect(dawn[NauticalTwilightSymbol].start.isSame(
+            dawn[AstronomicalTwilightSymbol].end
+        )).to.be.true;
+
+        expect(dawn[CivilTwilightSymbol].start.isSame(
+            dawn[NauticalTwilightSymbol].end
+        )).to.be.true;
+
+        expect(dawn[AstronomicalTwilightSymbol].start.isBefore(
+            dawn[CivilTwilightSymbol].end
+        )).to.be.true;
+    });
+
+    it("correctly orders dusk twilight", () => {
+        const sunEvents = getSunEvents(now, location);
+        const dusk: ITwilight = sunEvents[DuskSymbol];
+
+        expect(dusk[NauticalTwilightSymbol].start.isSame(
+            dusk[CivilTwilightSymbol].end
+        )).to.be.true;
+
+        expect(dusk[AstronomicalTwilightSymbol].start.isSame(
+            dusk[NauticalTwilightSymbol].end
+        )).to.be.true;
+
+        expect(dusk[CivilTwilightSymbol].start.isBefore(
+            dusk[AstronomicalTwilightSymbol].end
+        )).to.be.true;
     });
 });
