@@ -53,8 +53,11 @@ export interface ISunEvents {
  * @param location Specifies the target location.
  */
 export function getSunEvents(date: Moment, location: IPosition): ISunEvents {
-    const times = SunCalc.getTimes(date.toDate(), location.latitude, location.longitude);
-    const timesTomorrow = SunCalc.getTimes(moment(date).add(1, 'd').toDate(), location.latitude, location.longitude);
+    const today = moment(date).startOf('day').add(12, 'h');
+    const tomorrow = moment(today).add(1, 'd');
+
+    const times = SunCalc.getTimes(today.toDate(), location.latitude, location.longitude);
+    const timesTomorrow = SunCalc.getTimes(tomorrow.toDate(), location.latitude, location.longitude);
 
     const nightEnd = moment(times.nightEnd).isAfter(moment(times.night)) ? moment(times.nightEnd) : moment(timesTomorrow.nightEnd);
     const nadirStart = moment(times.nadir).isAfter(moment(times.night)) ? moment(times.nadir) : moment(timesTomorrow.nadir);

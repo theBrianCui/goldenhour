@@ -5,7 +5,7 @@ import { EventOrder, getSunEvents, IInterval } from "./sunEvents";
 
 // tslint:disable:no-unused-expression
 describe('lib/sunEvents.ts', () => {
-    const now = moment("2018-01-14").startOf('day').add(12, 'h');
+    const now = moment("2018-01-14");
     const tomorrow = moment(now).add(1, 'd');
     const location: IPosition = {
         latitude: 47,
