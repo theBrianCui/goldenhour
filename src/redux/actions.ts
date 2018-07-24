@@ -14,7 +14,7 @@ export type IAction =
     | IUpdateEventListAction;
 
 export interface IUpdateCurrentTimeAction {
-    type: ActionTypes.UPDATE_CURRENT_TIME,
+    type: ActionTypes.UPDATE_CURRENT_TIME;
     currentTime: Moment;
 }
 
@@ -26,7 +26,7 @@ export function updateCurrentTime(): IUpdateCurrentTimeAction {
 }
 
 export interface IUpdateStatusAction {
-    type: ActionTypes.UPDATE_STATUS,
+    type: ActionTypes.UPDATE_STATUS;
     status: string;
 }
 
@@ -34,13 +34,13 @@ export function updateStatus(status: string): IUpdateStatusAction {
     return {
         type: ActionTypes.UPDATE_STATUS,
         status,
-    }
+    };
 }
 
 export interface IUpdateEventListAction {
-    type: ActionTypes.UPDATE_EVENT_LIST,
-    updateTime: Moment,
-    eventList: ISunEvents,
+    type: ActionTypes.UPDATE_EVENT_LIST;
+    updateTime: Moment;
+    eventList: ISunEvents;
 }
 
 export function updateEventList(updateTime: Moment, eventList: ISunEvents): IUpdateEventListAction {
@@ -48,5 +48,5 @@ export function updateEventList(updateTime: Moment, eventList: ISunEvents): IUpd
         type: ActionTypes.UPDATE_EVENT_LIST,
         updateTime,
         eventList,
-    }
+    };
 }

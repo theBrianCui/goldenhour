@@ -25,9 +25,9 @@ export interface IInterval {
 }
 
 export interface ITwilight extends IInterval {
-    [CivilTwilightSymbol]: IInterval,
-    [NauticalTwilightSymbol]: IInterval,
-    [AstronomicalTwilightSymbol]: IInterval,
+    [CivilTwilightSymbol]: IInterval;
+    [NauticalTwilightSymbol]: IInterval;
+    [AstronomicalTwilightSymbol]: IInterval;
 }
 
 export const EventOrder =
@@ -35,16 +35,16 @@ export const EventOrder =
      DuskSymbol, NightSymbol, NadirSymbol, DawnSymbol];
 
 export interface ISunEvents {
-    [SunriseSymbol]: IInterval,
-    [GoldenHourMorningSymbol]: IInterval,
-    [SolarNoonSymbol]: IInterval,
-    [GoldenHourEveningSymbol]: IInterval,
-    [SunsetSymbol]: IInterval,
+    [SunriseSymbol]: IInterval;
+    [GoldenHourMorningSymbol]: IInterval;
+    [SolarNoonSymbol]: IInterval;
+    [GoldenHourEveningSymbol]: IInterval;
+    [SunsetSymbol]: IInterval;
 
-    [DuskSymbol]: ITwilight,
-    [NightSymbol]: IInterval,
-    [NadirSymbol]: IInterval,
-    [DawnSymbol]: ITwilight,
+    [DuskSymbol]: ITwilight;
+    [NightSymbol]: IInterval;
+    [NadirSymbol]: IInterval;
+    [DawnSymbol]: ITwilight;
 }
 
 /**
@@ -122,5 +122,5 @@ export function getSunEvents(date: Moment, location: IPosition): ISunEvents {
                 end: sunriseTomorrow,
             },
         }
-    }
+    };
 }

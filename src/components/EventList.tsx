@@ -22,7 +22,7 @@ function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.
     let eventNodes: JSX.Element[] = [];
     for (const eventSymbol of EventOrder) {
         const event = eventList[eventSymbol];
-        if (!event) { continue };
+        if (!event) { continue; }
 
         eventNodes.push(
             <EventRow
@@ -88,7 +88,7 @@ function EventList(props: IEventListProps): JSX.Element {
         <div>
             {eventNodes}
         </div>
-    )
+    );
 }
 
 function connectStateToProps(state: IState) {
