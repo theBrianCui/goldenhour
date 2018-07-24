@@ -3,10 +3,11 @@ import { Moment } from "moment";
 import * as SunCalc from "suncalc";
 
 import { IPosition } from "../dom/location";
+import { IInterval } from "../interfaces";
 
 export interface IGoldenHours {
-    morning: Moment,
-    evening: Moment,
+    morning: IInterval,
+    evening: IInterval,
 }
 
 // tslint:disable:object-literal-sort-keys
@@ -17,10 +18,18 @@ export interface IGoldenHours {
  */
 function getGoldenHours(date: Moment, location: IPosition): IGoldenHours {
     const times = SunCalc.getTimes(date.toDate(), location.latitude, location.longitude);
+    const morningGoldenHour = moment(times.goldenHourEnd);
+    const eveningGoldenHour = moment(times.goldenHour);
 
     return {
-        morning: moment(times.goldenHourEnd),
-        evening: moment(times.goldenHour),
+        morning: {
+            start: morningGoldenHour,
+            end: morningGoldenHour.add(1, 'h'),
+        },
+        evening: {
+            start: eveningGoldenHour,
+            end: eveningGoldenHour.add(1, 'h'),
+        }
     };
 }
 
@@ -34,12 +43,12 @@ export default function getUpcomingGoldenHours(location: IPosition): IGoldenHour
     const tomorrowGoldenHours = getGoldenHours(moment().add(1, 'd'), location);
 
     const currentInterval = moment().subtract(1, 'h');
-    if (currentInterval.isBefore(todayGoldenHours.morning)) {
+    if (currentInterval.isBefore(todayGoldenHours.morning.start)) {
         return {
             morning: todayGoldenHours.morning,
             evening: todayGoldenHours.evening,
         };
-    } else if (currentInterval.isBefore(todayGoldenHours.evening)) {
+    } else if (currentInterval.isBefore(todayGoldenHours.evening.end)) {
         return {
             morning: tomorrowGoldenHours.morning,
             evening: todayGoldenHours.evening,

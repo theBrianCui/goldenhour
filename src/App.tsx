@@ -34,11 +34,14 @@ class App extends React.Component<object, IAppState> {
         getLocation()
             .then(getUpcomingGoldenHours)
             .then(goldenHours => {
+                const morning = goldenHours.morning;
+                const evening = goldenHours.evening;
+
                 let location: string;
-                if (goldenHours.morning.isBefore(goldenHours.evening)) {
-                    location = `Upcoming Morning: ${goldenHours.morning.format("MMMM Do YYYY, h:mm:ss a")}, Evening: ${goldenHours.evening.format("MMMM Do YYYY, h:mm:ss a")}`;
+                if (morning.start.isBefore(evening.start)) {
+                    location = `Upcoming Morning: ${morning.start.format("MMMM Do YYYY, h:mm:ss a")}, Evening: ${evening.start.format("MMMM Do YYYY, h:mm:ss a")}`;
                 } else {
-                    location = `Upcoming Evening: ${goldenHours.evening.format("MMMM Do YYYY, h:mm:ss a")}, Next Morning: ${goldenHours.morning.format("MMMM Do YYYY, h:mm:ss a")}`;
+                    location = `Upcoming Evening: ${evening.start.format("MMMM Do YYYY, h:mm:ss a")}, Next Morning: ${morning.start.format("MMMM Do YYYY, h:mm:ss a")}`;
                 }
 
                 this.setState({
