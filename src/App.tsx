@@ -1,35 +1,38 @@
 import * as moment from 'moment';
 import * as React from 'react';
 import './App.css';
+import { EventRow, IEventRowProps } from './components/eventRow';
 import getLocation from './dom/location';
 import { IInterval } from './interfaces';
 import { EventOrder, getSunEvents, ITwilight } from './lib/sunEvents';
 import logo from './logo.svg';
 
 interface IAppState {
-    events: string[];
+    status: string;
+    eventList: IEventRowProps[];
 }
 
 class App extends React.Component<object, IAppState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            events: ["Determining your location..."]
+            eventList: [],
+            status: "Determining your location...",
         };
     }
 
     public render() {
-        const eventList = this.state.events.map((event) => {
+        const eventList = this.state.eventList.map((eventProps) => {
             return (
                 /* shh, don't tell anyone about this key parameter */
-                <div key={Date.now()}>{event}</div>
+                <EventRow {...eventProps} key={Date.now()}>{event}</EventRow>
             );
         })
         return (
             <div className="App">
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
-                    <h1 className="App-title">Hello, World!</h1>
+                    <h1 className="App-title">{this.state.status}</h1>
                 </header>
                 <p className="App-intro">
                     {eventList}
@@ -39,17 +42,25 @@ class App extends React.Component<object, IAppState> {
     }
 
     public componentDidMount() {
+        const now = moment();
+        console.log("Component mounted...");
         getLocation()
-            .then(location => getSunEvents(moment(), location))
+            .then(location => {
+                console.log("Location acquired!");
+                return location;
+            })
+            .then(location => getSunEvents(now, location))
             .then(sunEvents => {
-                let eventStrings: string[] = [];
+                let events: IEventRowProps[] = [];
 
                 for (const eventName of EventOrder) {
                     const event: IInterval = sunEvents[eventName];
 
-                    eventStrings.push(`${eventName}: 
-                        Start: ${event.start.format("MMMM Do YYYY, h:mm:ss a")}
-                        End: ${event.end.format("MMMM Do YYYY, h:mm:ss a")}`);
+                    events.push({
+                        ...event,
+                        happeningNow: now.isBetween(event.start, event.end),
+                        name: eventName,
+                    });
 
                     if (eventName !== "dawn" && eventName !== "dusk") {
                         continue;
@@ -57,34 +68,43 @@ class App extends React.Component<object, IAppState> {
 
                     /* Twilight Events have civil, nautical, and astronomical subevents. */
                     const twilightEvent: ITwilight = event as ITwilight;
-                    let twilightStrings: string[] = [];
+                    let twilightEvents: IEventRowProps[] = [];
 
-                    twilightStrings.push(`${eventName} civil twilight: 
-                        Start: ${twilightEvent.civil.start.format("MMMM Do YYYY, h:mm:ss a")}
-                        End: ${twilightEvent.civil.end.format("MMMM Do YYYY, h:mm:ss a")}`);
+                    twilightEvents.push({
+                        ...event,
+                        happeningNow: now.isBetween(twilightEvent.civil.start, twilightEvent.civil.end),
+                        name: `${eventName} civil twilight`,
+                    });
 
-                    twilightStrings.push(`${eventName} nautical twilight: 
-                        Start: ${twilightEvent.nautical.start.format("MMMM Do YYYY, h:mm:ss a")}
-                        End: ${twilightEvent.nautical.end.format("MMMM Do YYYY, h:mm:ss a")}`);
+                    twilightEvents.push({
+                        ...event,
+                        happeningNow: now.isBetween(twilightEvent.nautical.start, twilightEvent.nautical.end),
+                        name: `${eventName} nautical twilight`,
+                    });
 
-                    twilightStrings.push(`${eventName} astronomical twilight: 
-                        Start: ${twilightEvent.astronomical.start.format("MMMM Do YYYY, h:mm:ss a")}
-                        End: ${twilightEvent.astronomical.end.format("MMMM Do YYYY, h:mm:ss a")}`);
+                    twilightEvents.push({
+                        ...event,
+                        happeningNow: now.isBetween(twilightEvent.astronomical.start, twilightEvent.astronomical.end),
+                        name: `${eventName} astronomical twilight`,
+                    });
 
                     if (eventName === "dawn") {
-                        twilightStrings = twilightStrings.reverse();
+                        twilightEvents = twilightEvents.reverse();
                     }
 
-                    eventStrings = eventStrings.concat(twilightStrings);
+                    events = events.concat(twilightEvents);
                 }
 
                 this.setState({
-                    events: eventStrings,
+                    eventList: events,
+                    status: "Events for where you are, now",
                 });
             })
             .catch((error: string) => {
+                console.log(error);
                 this.setState({
-                    events: [],
+                    eventList: [],
+                    status: "Something went wrong, try again",
                 });
             });
     }
