@@ -1,20 +1,26 @@
 import * as Promise from "bluebird";
 import * as React from "react";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
 import "./App.css";
 import EventList from "./components/EventList";
 import Header from "./components/Header";
 import getLocation, { IPosition } from "./dom/location";
-import { store } from "./index";
 import { getSunEvents } from "./lib/sunEvents";
 import { updateCurrentTime, updateEventList, updateLocation, updateStatus } from "./redux/actions";
+import { Reducers } from "./redux/reducers";
+
+export const store = createStore(Reducers);
 
 export default class App extends React.Component {
     public render() {
         return (
-            <div className="App">
-                <Header /> 
-                <EventList />
-            </div>
+            <Provider store={store}>
+                <div className="App">
+                    <Header /> 
+                    <EventList />
+                </div>
+            </Provider>
         );
     }
 
@@ -48,13 +54,9 @@ export default class App extends React.Component {
     }
 
     private updateSunEvents() {
-        console.log("Updating sun events...");
         const state = store.getState();
         if (!state.currentLocation) { return; }
 
-        console.log("A location is known...");
         store.dispatch(updateEventList(state.currentTime, getSunEvents(state.currentTime, state.currentLocation)));
-
-        console.log("update complete!");
     }
 }

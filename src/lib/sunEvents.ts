@@ -4,6 +4,7 @@ import * as SunCalc from "suncalc";
 
 import { IPosition } from "../dom/location";
 
+export const DawnSymbol = Symbol("dawn");
 export const SunriseSymbol = Symbol("sunrise");
 export const GoldenHourMorningSymbol = Symbol("goldenHourMorning");
 export const SolarNoonSymbol = Symbol("solarNoon");
@@ -17,7 +18,6 @@ export const AstronomicalTwilightSymbol = Symbol("astronomicalTwilight");
 
 export const NightSymbol = Symbol("night");
 export const NadirSymbol = Symbol("nadir");
-export const DawnSymbol = Symbol("dawn");
 
 export interface IInterval {
     start: Moment;
