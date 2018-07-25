@@ -1,3 +1,4 @@
+import { css } from "emotion";
 import * as React from "react";
 import { connect } from "react-redux";
 import logo from "../logo.svg";
@@ -9,11 +10,24 @@ export interface IHeaderProps {
 }
 
 function Header(props: IHeaderProps): JSX.Element {
+    const headerStyle = css({
+        backgroundColor: "#222",
+        color: "white",
+        paddingTop: "1rem",
+        paddingBottom: "1rem",
+    });
+
+    const timeStyle = css({
+        fontWeight: "bold",
+    });
+
+    const locationStyle = css({});
+
     return (
-        <header className="App-header">
+        <header className={headerStyle}>
             <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">{props.currentTime}</h1>
-            <span>{props.status}</span>
+            <div className={timeStyle}>{props.currentTime}</div>
+            <div className={locationStyle}>{props.status}</div>
         </header>
     );
 }

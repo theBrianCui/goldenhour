@@ -1,3 +1,4 @@
+import { css } from "emotion";
 import { Moment } from "moment";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -10,10 +11,10 @@ interface IEventListProps {
     eventList: ISunEvents | null;
 }
 
-const commonFormatString = "hh:mm:ss a";
+const commonFormatString = "MM DD YY hh:mm:ss a";
 
 function eventKey(symbol: symbol, moment: Moment, subsymbol?: symbol): string {
-    return symbol.toString() + moment.format("DDDDYYYY") + (subsymbol ? subsymbol.toString() : "");
+    return symbol.toString() + moment.local().format("DDDDYYYY") + (subsymbol ? subsymbol.toString() : "");
 }
 
 function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.Element[] {
@@ -30,8 +31,8 @@ function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.
             <EventRow
                 key={eventKey(eventSymbol, currentTime)}
                 name={eventSymbol.toString()}
-                start={event.start.format(commonFormatString)}
-                end={event.end.format(commonFormatString)}
+                start={event.start.local().format(commonFormatString)}
+                end={event.end.local().format(commonFormatString)}
                 happeningNow={currentTime.isBetween(event.start, event.end, "second", "[]")}
             />
         );
@@ -46,8 +47,8 @@ function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.
                 <EventRow
                     key={eventKey(CivilTwilightSymbol, currentTime, eventSymbol)}
                     name={CivilTwilightSymbol.toString()}
-                    start={civilTwilight.start.format(commonFormatString)}
-                    end={civilTwilight.end.format(commonFormatString)}
+                    start={civilTwilight.start.local().format(commonFormatString)}
+                    end={civilTwilight.end.local().format(commonFormatString)}
                     happeningNow={currentTime.isBetween(civilTwilight.start, civilTwilight.end, "second", "[]")}
                 />
             );
@@ -56,8 +57,8 @@ function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.
                 <EventRow
                     key={eventKey(NauticalTwilightSymbol, currentTime, eventSymbol)}
                     name={NauticalTwilightSymbol.toString()}
-                    start={nauticalTwilight.start.format(commonFormatString)}
-                    end={nauticalTwilight.end.format(commonFormatString)}
+                    start={nauticalTwilight.start.local().format(commonFormatString)}
+                    end={nauticalTwilight.end.local().format(commonFormatString)}
                     happeningNow={currentTime.isBetween(nauticalTwilight.start, nauticalTwilight.end, "second", "[]")}
                 />
             );
@@ -66,8 +67,8 @@ function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.
                 <EventRow
                     key={eventKey(AstronomicalTwilightSymbol, currentTime, eventSymbol)}
                     name={AstronomicalTwilightSymbol.toString()}
-                    start={astronomicalTwilight.start.format(commonFormatString)}
-                    end={astronomicalTwilight.end.format(commonFormatString)}
+                    start={astronomicalTwilight.start.local().format(commonFormatString)}
+                    end={astronomicalTwilight.end.local().format(commonFormatString)}
                     happeningNow={currentTime.isBetween(astronomicalTwilight.start, astronomicalTwilight.end, "second", "[]")}
                 />
             );
@@ -85,9 +86,12 @@ function buildEventRows(currentTime: Moment, eventList: ISunEvents | null): JSX.
 
 function EventList(props: IEventListProps): JSX.Element {
     const eventNodes = buildEventRows(props.currentTime, props.eventList);
+    const style = css({
+        backgroundColor: "#0098e6",
+    });
 
     return (
-        <div>
+        <div className={style}>
             {eventNodes}
         </div>
     );
